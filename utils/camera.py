@@ -38,10 +38,10 @@ class ImageData():
                 # Catch for no label existing #
                 print(f"Could not load label \'{label_path}\'. Using blank labels.")
                 label_img = np.zeros(self.image.shape).astype(np.uint8)
-            self.colour_label = cv2.resize(label_img, (self.image.shape[1], self.image.shape[0]))
+            self.colour_label = cv2.resize(label_img, (self.image.shape[1], self.image.shape[0]), interpolation=cv2.INTER_NEAREST)
 
             H, W, _ = label_img.shape
-            self.label_img = np.full((H, W), -1, dtype=np.uint8)  # unknown = 255
+            self.label_img = np.full((H, W), 2, dtype=np.uint8)  # unknown = 255
 
             # Convert to uint8 in case it's float
             img = label_img.astype(np.uint8)
@@ -51,7 +51,7 @@ class ImageData():
                 mask = np.all(img == color, axis=2)
                 self.label_img[mask] = class_idx
 
-            self.label_img = cv2.resize(self.label_img, (self.image.shape[1], self.image.shape[0]))
+            self.label_img = cv2.resize(self.label_img, (self.image.shape[1], self.image.shape[0]), interpolation=cv2.INTER_NEAREST)
 
     def create_camera_matrix(self, focal_length_mm, principal_point_x_pixels, principal_point_y_pixels,
                             pixels_per_mm_x, pixels_per_mm_y):
