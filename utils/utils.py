@@ -2,6 +2,7 @@ import numpy as np
 import os
 import cv2
 import open3d as o3d
+from natsort import natsorted
 
 beam_altitudes = np.deg2rad(np.array([
     20.97, 18.51, 15.97, 13.37, 12.04, 10.70, 9.35, 8.70,
@@ -32,6 +33,53 @@ def read_calib_file(path):
             nums = [float(x) for x in vals.strip().split()]
             d[key.strip()] = np.array(nums)
     return d
+
+def get_all_corr_files(image_timestamps, dirs, tol=200000, adjust=None):
+
+    single = not isinstance(image_timestamps, (list, np.ndarray))
+    if single:
+        image_timestamps = [image_timestamps]
+
+    image_timestamps = np.array(image_timestamps, dtype=np.int64)
+
+    results_per_dir = []
+    indices_per_dir = []
+    for dir in dirs:
+        if adjust is None:
+            filenames = np.array([f for f in natsorted(os.listdir(dir)) if os.path.isfile(dir + f)])
+        else:
+            filenames = np.array([f for f in natsorted(os.listdir(dir)) if os.path.isfile(dir + f)])[:adjust]
+
+        timestamps = np.array([int(f.split('.')[0]) for f in filenames], dtype=np.int64)
+
+        diffs = np.abs(image_timestamps[:, None] - timestamps[None, :])
+        closest_indices = np.argmin(diffs, axis=1)
+        closest_diffs = diffs[np.arange(len(image_timestamps)), closest_indices]
+
+        violations = closest_diffs > tol
+        if violations.any():
+            bad_ts = image_timestamps[violations]
+            raise Exception(f"No timestamp in {dir} within tolerance for timestamps: {bad_ts}")
+
+        results_per_dir.append(filenames[closest_indices])
+        indices_per_dir.append(closest_indices)
+
+    if len(dirs) == 1:
+        results = [f"{dirs[0]}/{f}" for f in results_per_dir[0]]
+        indices = indices_per_dir[0].tolist()
+    else:
+        results = [
+            tuple(f"{dirs[i]}/{results_per_dir[i][j]}" for i in range(len(dirs)))
+            for j in range(len(image_timestamps))
+        ]
+        indices = [
+            tuple(int(indices_per_dir[i][j]) for i in range(len(dirs)))
+            for j in range(len(image_timestamps))
+        ]
+
+    if single:
+        return results[0], indices[0]
+    return results, indices
 
 def get_corr_files(image_timestamp, dirs, tol=200000):
     output_filenames = []
