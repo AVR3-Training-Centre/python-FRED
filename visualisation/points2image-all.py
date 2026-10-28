@@ -43,8 +43,7 @@ lidar_dir = f"{root_directory}/{location}_{sequence}/ouster/"
 utm_dir = f"{root_directory}/{location}_{sequence}/utm/"
 
 img_calib_file = f"./camera_calib.txt"
-# lidar_calib_file = f"./calib.txt"
-lidar_calib_file = f"./paper_calib.txt"
+lidar_calib_file = f"./calib.txt"
 
 timestamps = [filename.split('.png')[0] for filename in natsorted(os.listdir(image_dir)) if os.path.isfile(image_dir+filename)]
 
