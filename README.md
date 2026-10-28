@@ -20,7 +20,7 @@ Huggingface Space: https://huggingface.co/spaces/CMalone-Jupiter/python-FRED
 Research Group: https://avr3.org.au/ 
 
 ## Cite
-If you use this dataset or development kit in your work, you can cite our preprint article using:  
+If you use this dataset or development kit  in your work, you can cite our preprint article using:  
 ```
 @article{malone2026fred,
       title={FRED: A Multi-Modal Autonomous Driving Dataset for Flooded Road Environments}, 

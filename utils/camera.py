@@ -146,7 +146,7 @@ class ImageData():
             r, g, b, _ = cmap(c)
             colour = (r*255, g*255, b*255)
             cv2.circle(img_vis, (int(point[0]), int(point[1])), 5, colour, -1)  # -1 = filled circle
-            cv2.circle(mask_img, (int(point[0]), int(point[1])), 10, 255, -1)
+            cv2.circle(mask_img, (int(point[0]), int(point[1])), 10, (float(c),), -1)
 
         if semantic_label:
             return img_vis, image_points, valid_mask, mask_img, meta_points

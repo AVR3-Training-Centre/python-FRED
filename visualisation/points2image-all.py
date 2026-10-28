@@ -13,7 +13,7 @@ import utils.utils as utils
 from natsort import natsorted
 
 # Toggle the following boolean to False if not using HuggingFace App
-hf_app = True
+hf_app = False
 
 if hf_app:
     from huggingface_hub import snapshot_download
@@ -25,7 +25,7 @@ location = 'Cambogan'
 sequence = '20250811_113017'
 condition = 'flooded'
 camera_pos = 'front'
-root_directory = f"/data/FRED/{condition}/KITTI-style"
+root_directory = f"D:/Datasets/FRED/{condition}/KITTI-style"
 
 if (not os.path.exists(root_directory)) and (hf_app):
     snapshot_download(
@@ -43,7 +43,8 @@ lidar_dir = f"{root_directory}/{location}_{sequence}/ouster/"
 utm_dir = f"{root_directory}/{location}_{sequence}/utm/"
 
 img_calib_file = f"./camera_calib.txt"
-lidar_calib_file = f"./calib.txt"
+# lidar_calib_file = f"./calib.txt"
+lidar_calib_file = f"./paper_calib.txt"
 
 timestamps = [filename.split('.png')[0] for filename in natsorted(os.listdir(image_dir)) if os.path.isfile(image_dir+filename)]
 

@@ -17,7 +17,7 @@ import yaml  # pip install pyyaml
 from tqdm import tqdm
 
 # Toggle the following boolean to False if not using HuggingFace App
-hf_app = True
+hf_app = False
 
 if hf_app:
     from huggingface_hub import snapshot_download

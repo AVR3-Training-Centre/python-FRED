@@ -91,6 +91,9 @@ class PointCloud:
 
         valid = pts_cam_h[:,2] > 1e-6
 
+        # print(pts_cam_h.shape)
+        # print(valid.shape)
+
         distances = np.linalg.norm(pts_cam_h[valid,:], axis=1)     
 
         return pts_cam_h[valid,:], np.linalg.norm(pts_cam_h, axis=1), self.points[:,3], pts_cam_h, valid
